@@ -19,7 +19,6 @@ jobs:
     - name: Install x11 dependencies
       run: sudo apt install -y libx11-dev xserver-xorg-dev xorg-dev
 
-
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
@@ -27,6 +26,16 @@ jobs:
 
     - name: Build
       run: go build -v ./...
-
+      
     - name: Test
       run: go test -v ./...
+  
+    - name: Upload build as artifact.
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: openstomp-builds 
+        path: ./*
+        warn: Output a warning but do not fail the action
+        error: Fail the action with an error message
+        ignore: Do not output any warnings or errors, the action does not fail
+        retention-days: 90
