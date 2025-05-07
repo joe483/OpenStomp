@@ -11,7 +11,7 @@ on:
 
 jobs:
 
-  build:
+  build-linux:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -24,7 +24,10 @@ jobs:
       with:
         go-version: '1.23'
 
-    - name: Build
+    - name: Build for Windows
+      run: env GOOS=windows GOARCH=386 CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ go build -ldflags -H=windowsgui -v ./...
+      
+    - name: Build for Linux
       run: go build -v ./...
       
     - name: Test
@@ -34,8 +37,5 @@ jobs:
       uses: actions/upload-artifact@v4.6.2
       with:
         name: openstomp-builds 
-        path: ./*
-        warn: Output a warning but do not fail the action
-        error: Fail the action with an error message
-        ignore: Do not output any warnings or errors, the action does not fail
+        path: ./openstomp*
         retention-days: 90
